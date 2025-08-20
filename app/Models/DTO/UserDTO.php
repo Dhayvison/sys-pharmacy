@@ -4,34 +4,35 @@ namespace App\Models\DTO;
 
 use Illuminate\Http\Request;
 
-class UserDTO
+readonly class UserDTO
 {
     public function __construct(
-        public string $name,
-        public string $email,
-        public string $password,
-        public string $phone_number,
-        public ?string $avatar = null,
-        public ?string $google_id = null,
-        public ?string $google_token = null,
-        public ?string $google_refresh_token = null
+        private string $name,
+        private string $email,
+        private string $password,
+        private string $phone_number,
+        private ?string $avatar = null,
+        private ?string $google_id = null,
+        private ?string $google_token = null,
+        private ?string $google_refresh_token = null
     ) {}
+
+    public static function fromRequest(Request $request): self
+    {
+        return new self(
+            $request->input('name'),
+            $request->input('email'),
+            $request->input('password'),
+            $request->input('phone_number'),
+            $request->input('avatar'),
+            $request->input('google_id'),
+            $request->input('google_token'),
+            $request->input('google_refresh_token')
+        );
+    }
 
     public static function fromArray(array $data): self
     {
-        $requiredFields = [
-            'name' => 'Name',
-            'email' => 'Email',
-            'password' => 'Password',
-            'phone_number' => 'Phone number',
-        ];
-
-        foreach ($requiredFields as $field => $label) {
-            if (!isset($data[$field]) || !is_string($data[$field]) || trim($data[$field]) === '') {
-                throw new \InvalidArgumentException("{$label} is required and must be a non-empty string.");
-            }
-        }
-
         return new self(
             $data['name'],
             $data['email'],
@@ -56,5 +57,24 @@ class UserDTO
             'google_token' => $this->google_token,
             'google_refresh_token' => $this->google_refresh_token
         ];
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function withPassword(string $password): self
+    {
+        return new self(
+            $this->name,
+            $this->email,
+            $password,
+            $this->phone_number,
+            $this->avatar,
+            $this->google_id,
+            $this->google_token,
+            $this->google_refresh_token
+        );
     }
 }

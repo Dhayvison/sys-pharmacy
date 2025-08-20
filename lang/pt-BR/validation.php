@@ -86,5 +86,10 @@ return [
     'mimes' => 'O campo :attribute deve ser um arquivo do tipo: :values.',
     'regex' => 'O formato do campo :attribute é inválido.',
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'nome',
+        'email' => 'e-mail',
+        'password' => 'senha',
+        'phone_number' => 'telefone',
+    ],
 ];

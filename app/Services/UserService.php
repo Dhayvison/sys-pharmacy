@@ -18,9 +18,8 @@ class UserService
 
     public function store(UserDTO $userData, string $role = 'client')
     {
-        $userData->password = Hash::make($userData->password);
-
-        $user = $this->userRepository->create($userData);
+        $hashedPassword = Hash::make($userData->getPassword());
+        $user = $this->userRepository->create($userData->withPassword($hashedPassword));
 
         $user->assignRole($role);
 

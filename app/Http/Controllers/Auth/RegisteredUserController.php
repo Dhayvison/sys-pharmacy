@@ -28,8 +28,10 @@ class RegisteredUserController extends Controller
      */
     public function store(StoreUserRequest $request, UserService $userService): RedirectResponse
     {
+        $validated = $request->validated();
+
         $user = $userService->store(
-            UserDTO::fromArray($request->validated()),
+            UserDTO::fromArray($validated),
             'client'
         );
 
