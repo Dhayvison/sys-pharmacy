@@ -8,10 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
+import { cellphoneMask } from '@/utils/masks';
 
 type RegisterForm = {
     name: string;
     email: string;
+    phone_number: string;
     password: string;
     password_confirmation: string;
 };
@@ -20,6 +22,7 @@ export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm<Required<RegisterForm>>({
         name: '',
         email: '',
+        phone_number: '',
         password: '',
         password_confirmation: '',
     });
@@ -32,12 +35,12 @@ export default function Register() {
     };
 
     return (
-        <AuthLayout title="Create an account" description="Enter your details below to create your account">
+        <AuthLayout title="Cadastre-se aqui" description="Preencha os campos abaixo para cadastrar seu perfil.">
             <Head title="Register" />
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="name">Name</Label>
+                        <Label htmlFor="name">Nome</Label>
                         <Input
                             id="name"
                             type="text"
@@ -48,13 +51,13 @@ export default function Register() {
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
                             disabled={processing}
-                            placeholder="Full name"
+                            placeholder="Digite seu nome"
                         />
                         <InputError message={errors.name} className="mt-2" />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Email address</Label>
+                        <Label htmlFor="email">E-mail</Label>
                         <Input
                             id="email"
                             type="email"
@@ -64,56 +67,79 @@ export default function Register() {
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             disabled={processing}
-                            placeholder="email@example.com"
+                            placeholder="Digite seu e-mail"
                         />
                         <InputError message={errors.email} />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password">Password</Label>
+                        <Label htmlFor="phone">Telefone</Label>
+                        <Input
+                            id="phone"
+                            type="text"
+                            required
+                            tabIndex={3}
+                            autoComplete="phone"
+                            value={data.phone_number}
+                            onChange={(e) => setData('phone_number', cellphoneMask(e.target.value))}
+                            disabled={processing}
+                            placeholder="Digite seu número de telefone"
+                        />
+                        <InputError message={errors.phone_number} className="mt-2" />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="password">Senha</Label>
                         <Input
                             id="password"
                             type="password"
                             required
-                            tabIndex={3}
+                            tabIndex={4}
                             autoComplete="new-password"
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             disabled={processing}
-                            placeholder="Password"
+                            placeholder="Defina uma senha segura"
                         />
                         <InputError message={errors.password} />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">Confirm password</Label>
+                        <Label htmlFor="password_confirmation">Confirmação de senha</Label>
                         <Input
                             id="password_confirmation"
                             type="password"
                             required
-                            tabIndex={4}
+                            tabIndex={5}
                             autoComplete="new-password"
                             value={data.password_confirmation}
                             onChange={(e) => setData('password_confirmation', e.target.value)}
                             disabled={processing}
-                            placeholder="Confirm password"
+                            placeholder="Digite novamente sua senha"
                         />
                         <InputError message={errors.password_confirmation} />
                     </div>
 
-                    <Button type="submit" className="mt-2 w-full" tabIndex={5} disabled={processing}>
+                    <Button type="submit" className="mt-2 w-full" tabIndex={6} disabled={processing}>
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Create account
+                        Cadastrar
                     </Button>
                 </div>
 
                 <div className="text-center text-sm text-muted-foreground">
-                    Already have an account?{' '}
-                    <TextLink href={route('login')} tabIndex={6}>
-                        Log in
+                    Você já está cadastrado?{' '}
+                    <TextLink href={route('login')} tabIndex={7}>
+                        Entre aqui
                     </TextLink>
                 </div>
             </form>
+
+            <Button asChild className="w-full" disabled={processing} variant={'outline'} tabIndex={8}>
+                <a href={route('auth.redirect', { driver: 'google' })}>
+                    Continuar com Google
+                    <img src={'/images/google-logo.webp'} className="h-4 w-4" />
+                </a>
+            </Button>
         </AuthLayout>
     );
 }

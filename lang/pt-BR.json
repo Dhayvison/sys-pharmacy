@@ -1,0 +1,11 @@
+{
+    "pending": "pendente",
+    "confirmed": "confirmado",
+    "preparing": "preparando",
+    "delivering": "em rota de entrega",
+    "delivered": "entregue",
+    "cancelled": "cancelado",
+    "finished": "finalizado",
+    "delivery": "Para entrega",
+    "takeout": "Para retirada"
+}

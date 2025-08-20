@@ -76,9 +76,11 @@ class User extends Authenticatable implements MustVerifyEmail
         if (env('MAIL_MAILER') !== 'smtp') {
             return true;
         }
+
         if (!$this->hasRole('client') || $this->google_id) {
             return true;
         }
+
         return parent::hasVerifiedEmail();
     }
 
