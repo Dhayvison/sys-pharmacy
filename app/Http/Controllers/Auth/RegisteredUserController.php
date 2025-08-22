@@ -31,7 +31,11 @@ class RegisteredUserController extends Controller
         $validated = $request->validated();
 
         $user = $userService->store(
-            UserDTO::fromArray($validated),
+            new UserDTO(
+                $validated['name'],
+                $validated['email'],
+                $validated['password'],
+            ),
             'client'
         );
 
