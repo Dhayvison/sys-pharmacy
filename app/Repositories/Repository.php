@@ -48,4 +48,9 @@ abstract class Repository
         }
         return false;
     }
+
+    public function deleteModel(Model $model)
+    {
+        return $model->delete();
+    }
 }
