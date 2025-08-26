@@ -14,19 +14,26 @@ use Inertia\Response;
 
 class BranchController extends Controller
 {
-    public function index(BranchService $branchService): Response
+    protected BranchService $service;
+
+    public function __construct(BranchService $service)
     {
-        $branches = $branchService->all();
+        $this->service = $service;
+    }
+
+    public function index(): Response
+    {
+        $branches = $this->service->all();
 
         return Inertia::render('branches/index', ['branches' => $branches]);
     }
 
-    public function store(StoreBranchRequest $request, BranchService $branchService)
+    public function store(StoreBranchRequest $request)
     {
         $validated = $request->validated();
 
         try {
-            $branchService->store(
+            $this->service->store(
                 new BranchDTO(
                     $validated['name'],
                     $validated['identifier'],
@@ -43,12 +50,12 @@ class BranchController extends Controller
         return redirect()->back()->with('success', 'Filial registrada com sucesso!');
     }
 
-    public function update(UpdateBranchRequest $request, Branch $branch, BranchService $branchService)
+    public function update(UpdateBranchRequest $request, Branch $branch)
     {
         $validated = $request->validated();
 
         try {
-            $branchService->update($branch->id, new BranchDTO(
+            $this->service->update($branch->id, new BranchDTO(
                 $validated['name'],
                 $validated['identifier'],
                 $validated['cnpj'],
@@ -63,9 +70,9 @@ class BranchController extends Controller
         return redirect()->back()->with('success', 'Filial atualizada com sucesso!');
     }
 
-    public function destroy(Branch $branch, BranchService $branchService)
+    public function destroy(Branch $branch)
     {
-        $branchService->delete($branch);
+        $this->service->delete($branch);
 
         return redirect()->back()->with('success', 'Filial removida com sucesso!');
     }
