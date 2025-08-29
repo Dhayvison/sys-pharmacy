@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { SharedData, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { LayoutGrid, Store } from 'lucide-react';
+import { LayoutGrid, ShoppingCart, Store } from 'lucide-react';
 import AppLogoIcon from './app-logo-icon';
 
 // const mainNavItems: NavItem[] = [
@@ -44,12 +44,12 @@ export function AppSidebar() {
             icon: Store,
             visible: auth.isAdmin,
         },
-        // {
-        //     title: 'Cardápio',
-        //     href: '/menu/categories',
-        //     icon: Notebook,
-        //     visible: auth.isAdmin,
-        // },
+        {
+            title: 'Vendas',
+            href: '/shopping/categories',
+            icon: ShoppingCart,
+            visible: auth.isAdmin,
+        },
         // {
         //     title: 'Pedidos',
         //     href: branch ? `/orders/list/${branch}` : '/orders/list',

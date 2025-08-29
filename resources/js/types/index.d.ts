@@ -56,3 +56,9 @@ export interface Branch {
     identifier: string;
     cnpj: string | null;
 }
+
+export interface Category {
+    id: number;
+    name: string;
+    description: string | null;
+}
