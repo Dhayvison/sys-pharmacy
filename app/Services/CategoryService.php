@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Category;
 use App\Models\DTO\CategoryDTO;
+use App\Models\DTO\PromptDTO;
 use App\Repositories\CategoryRepository;
 
 class CategoryService
@@ -43,6 +44,15 @@ class CategoryService
     public function suggestDescription(string $categoryName)
     {
         $deepSeekService = new DeepSeekService();
-        return $deepSeekService->generateCategoryDescriptionByName($categoryName);
+
+        $prompt = new PromptDTO(
+            persona: "Você é um especialista em publicidade e marketing digital muito criativo.",
+            objective: "Gere uma frase promocional para descrição da categoria \"$categoryName\" de um site farmacéutico.",
+            context: "A descrição será usada na área de vendas do site, logo abaixo do nome da categoria.",
+            tone: "Use um tom profissional.",
+            format: "Gere somente uma frase curta e de fácil leitura."
+        );
+
+        return $deepSeekService->generate($prompt);
     }
 }

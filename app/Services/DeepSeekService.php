@@ -3,14 +3,26 @@
 namespace App\Services;
 
 use App\Http\Clients\DeepSeekAPI;
+use App\Models\DTO\PromptDTO;
 
 class DeepSeekService
 {
-    public function generateCategoryDescriptionByName(string $categoryName)
+    public function generate(PromptDTO $prompt)
     {
-        $client = new DeepSeekAPI("Você é um especialista em publicidade e marketing digital. Seja criativo e profissional.");
+        $client = new DeepSeekAPI();
 
-        $response = $client->post("Gere uma frase promocional curta e de fácil leitura para descrição da categoria \"$categoryName\" de um site farmacéutico. Não use o nome da categoria diretamente na frase.");
+        $response = $client->post(
+            [
+                [
+                    'role'    => 'system',
+                    'content' => $prompt->getPersona() . ' ' .  $prompt->getTone(),
+                ],
+                [
+                    'role'    => 'user',
+                    'content' => $prompt->getObjective() . ' ' . $prompt->getContext() . ' ' . $prompt->getFormat(),
+                ],
+            ]
+        );
 
         return $response['choices'][0]['message']['content'] ?? null;
     }

@@ -9,18 +9,16 @@ class DeepSeekAPI
 {
     protected string $baseUrl;
     protected string $apiKey;
-    protected string $context;
     protected string $model;
 
-    public function __construct(string $context = '', string $model = 'deepseek-chat')
+    public function __construct(string $model = 'deepseek-chat')
     {
         $this->baseUrl = config('services.deepseek.base_url');
         $this->apiKey = config('services.deepseek.api_key');
-        $this->context = $context;
         $this->model = $model;
     }
 
-    public function post(string $prompt)
+    public function post(array $messages)
     {
         try {
             $url = $this->baseUrl . '/chat/completions';
@@ -28,16 +26,7 @@ class DeepSeekAPI
             $response = Http::withToken($this->apiKey)
                 ->post($url, [
                     'model' => $this->model,
-                    'messages' =>  [
-                        [
-                            'role'    => 'system',
-                            'content' => $this->context,
-                        ],
-                        [
-                            'role'    => 'user',
-                            'content' => $prompt,
-                        ],
-                    ],
+                    'messages' => $messages,
                     'stream' => false,
                 ]);
 
