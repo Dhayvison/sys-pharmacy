@@ -7,7 +7,7 @@ use App\Models\DTO\PromptDTO;
 
 class DeepSeekService
 {
-    public function generate(PromptDTO $prompt)
+    public function generate(PromptDTO $prompt, float $temperature = 1.0)
     {
         $client = new DeepSeekAPI();
 
@@ -21,7 +21,8 @@ class DeepSeekService
                     'role'    => 'user',
                     'content' => $prompt->getObjective() . ' ' . $prompt->getContext() . ' ' . $prompt->getFormat(),
                 ],
-            ]
+            ],
+            $temperature
         );
 
         return $response['choices'][0]['message']['content'] ?? null;

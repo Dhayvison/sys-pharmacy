@@ -18,7 +18,7 @@ class DeepSeekAPI
         $this->model = $model;
     }
 
-    public function post(array $messages)
+    public function post(array $messages, float $temperature = 1.0)
     {
         try {
             $url = $this->baseUrl . '/chat/completions';
@@ -27,6 +27,7 @@ class DeepSeekAPI
                 ->post($url, [
                     'model' => $this->model,
                     'messages' => $messages,
+                    'temperature' => $temperature,
                     'stream' => false,
                 ]);
 

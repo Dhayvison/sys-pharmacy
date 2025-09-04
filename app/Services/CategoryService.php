@@ -50,9 +50,9 @@ class CategoryService
             objective: "Gere uma frase promocional para descrição da categoria \"$categoryName\" de um site farmacéutico.",
             context: "A descrição será usada na área de vendas do site, logo abaixo do nome da categoria.",
             tone: "Use um tom profissional.",
-            format: "Gere somente uma frase curta e de fácil leitura."
+            format: "A frase deve ser curta e de fácil leitura."
         );
 
-        return $deepSeekService->generate($prompt);
+        return $deepSeekService->generate($prompt, 1.5);
     }
 }
