@@ -10,8 +10,7 @@ import ShoppingLayout from '@/layouts/shopping/layout';
 import { Category, SharedData, type BreadcrumbItem } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Head, useForm } from '@inertiajs/react';
-import { useDebounce } from '@uidotdev/usehooks';
-import { Pencil, Plus, Trash } from 'lucide-react';
+import { Pencil, Plus, SquarePen, Trash } from 'lucide-react';
 import { Dispatch, FormEventHandler, SetStateAction, useEffect, useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -38,7 +37,6 @@ function CategoryFormDialog({
         name: '',
         description: '',
     });
-    const debouncedName = useDebounce(data.name, 2000);
 
     const onOpen = () => {
         reset();
@@ -68,6 +66,13 @@ function CategoryFormDialog({
         }
     };
 
+    const handleGenerateDescription = async () => {
+        setGeneratingDescription(true);
+        const response = await getSuggestDescription(data.name);
+        setData('description', response.data.description);
+        setGeneratingDescription(false);
+    };
+
     useEffect(() => {
         if (category) {
             reset();
@@ -78,17 +83,6 @@ function CategoryFormDialog({
             setShow(true);
         }
     }, [clearErrors, category, reset, setData]);
-
-    useEffect(() => {
-        if (debouncedName && !category) {
-            (async () => {
-                setGeneratingDescription(true);
-                const response = await getSuggestDescription(debouncedName);
-                setData('description', response.data.description);
-                setGeneratingDescription(false);
-            })();
-        }
-    }, [debouncedName, setData, category]);
 
     return (
         <Dialog
@@ -121,15 +115,25 @@ function CategoryFormDialog({
                     <div className="grid gap-2">
                         <Label htmlFor="description">Descrição da Categoria</Label>
 
-                        <Input
-                            id="description"
-                            type="text"
-                            className="mt-1 block w-full"
-                            value={data.description}
-                            onChange={(e) => setData('description', e.target.value)}
-                            autoComplete="off"
-                            placeholder="Adicione uma descrição para a categoria"
-                        />
+                        <div className="mt-1 flex gap-2">
+                            <Input
+                                id="description"
+                                type="text"
+                                value={data.description}
+                                onChange={(e) => setData('description', e.target.value)}
+                                autoComplete="off"
+                                placeholder="Adicione uma descrição para a categoria"
+                            />
+                            <Button
+                                onClick={handleGenerateDescription}
+                                size={'icon'}
+                                variant={'outline'}
+                                disabled={!data.name || generatingDescription}
+                                title="Gerar descrição automática"
+                            >
+                                <SquarePen />
+                            </Button>
+                        </div>
 
                         {generatingDescription && <p className="animate-pulse text-xs text-blue-700">Gerando sugestão de descrição...</p>}
 
